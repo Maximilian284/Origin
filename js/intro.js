@@ -1,3 +1,4 @@
 setTimeout(() => {
-  open("game.html")
-}, 2000)
+  window.open("./game.html", "_self");
+}, 17000)
+
