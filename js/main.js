@@ -33,8 +33,20 @@ function start() {
 function update() {
   gameArea.clear()
   writeText("Origin", 20, 50, "45px", "#feda4a")
+
   drawImage("./res/ui/EnergyIcon.png", 20, 80, 32, 32)
-  writeText("Energy: " + energy, 55, 102, "20px", "white")
+  writeText("Energia: " + energy, 55, 102, "20px", "white")
+
+  drawRect(10, 130, 275, 150, "white")
+
+  drawImage("./res/ui/ProtonIcon.png", 20, 140, 28, 28)
+  writeText("Protoni: " + protons, 60, 162, "20px", "white")
+
+  drawImage("./res/ui/ElectronIcon.png", 20, 190, 28, 28)
+  writeText("Elettroni: " + electrons, 60, 212, "20px", "white")
+
+  drawImage("./res/ui/NeutronIcon.png", 20, 240, 28, 28)
+  writeText("Neutroni: " + neutrons, 60, 262, "20px", "white")
 }
 
 function writeText(text, x, y, size, color) {
@@ -50,3 +62,29 @@ function drawImage(src, x, y, width, height) {
   image.src = src
   ctx.drawImage(image, x, y, width, height)
 }
+
+function drawRect(x, y, width, height, color) {
+  let ctx = gameArea.context
+  ctx.beginPath()
+  ctx.lineWidth = "2"
+  ctx.strokeStyle = color
+  ctx.rect(x, y, width, height)
+  ctx.stroke()
+}
+
+function buttonClick(event, x, y, width, height) {
+  return event.x > x && event.x < x + width && event.y > y && event.y < y + height
+}
+
+gameArea.canvas.addEventListener("click", (event) => {
+  if (buttonClick(event, 20, 140, 28, 28)) {
+    protons += 1
+    energy -= 3
+  }else if (buttonClick(event, 20, 190, 28, 28)) {
+    electrons += 1
+    energy -= 1
+  }else if (buttonClick(event, 20, 240, 28, 28)) {
+    neutrons += 1
+    energy -= 3
+  }
+}) 
