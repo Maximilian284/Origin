@@ -1,15 +1,9 @@
 body {
-  background-color: black;
-  font-family: "courier new";
-  margin: 0 30px;
+  margin: 0;
+  overflow-y: hidden; 
+  overflow-x: hidden;
 }
 
-h1{
-  color: #feda4a;
-  font-size: 45px;
-}
-
-p{
-  font-weight: bold;
-  color: white;
+canvas {
+  background-color: black;  
 }
