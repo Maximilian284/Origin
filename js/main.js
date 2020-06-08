@@ -2,7 +2,7 @@ let energy = 1000
 let protons = 0
 let electrons = 0
 let neutrons = 0
-let elements = {
+let elements = {               // P  E  N 
   h : {name : "idrogeno", cost : [1, 1, 0], count : 0}, 
   he : {name : "elio", cost : [2, 2, 2], count : 0},
   c : {name : "carbonio", cost : [6, 6, 6], count : 0},
@@ -48,15 +48,20 @@ function update() {
   drawImage("./res/ui/NeutronIcon.png", 20, 240, 28, 28)
   writeText("Neutroni: " + neutrons, 60, 262, "20px", "white")
 
-  drawRect(2, window.innerHeight - 252, window.innerWidth - 3, 250, "white")
+  drawRect(-2, window.innerHeight - 248, window.innerWidth + 3, 250, "white")
 
-  drawImage("./res/ui/NeutronIcon.png", 80, window.innerHeight - 170, 100, 100)
-  writeText("H", 117, window.innerHeight - 107, "50px", "black")
+  drawImage("./res/ui/ContainerIcon.png", 80, window.innerHeight - 170, 100, 100)
+  writeText("H", 114, window.innerHeight - 107, "50px", "black", "bold")
+  writeText("Idrogeno: " + elements.h.count, 50, window.innerHeight - 35, "20px", "white")
+
+  drawImage("./res/ui/ContainerIcon.png", 280, window.innerHeight - 170, 100, 100)
+  writeText("He", 302, window.innerHeight - 107, "50px", "black", "bold")
+  writeText("Elio: " + elements.he.count, 270, window.innerHeight - 35, "20px", "white")
 }
 
-function writeText(text, x, y, size, color) {
+function writeText(text, x, y, size, color, style = "normal") {
   let ctx = gameArea.context
-  ctx.font = size + " courier new"
+  ctx.font = style + " " + size + " courier new"
   ctx.fillStyle = color
   ctx.fillText(text, x, y)
 }
@@ -82,14 +87,23 @@ function buttonClick(event, x, y, width, height) {
 }
 
 gameArea.canvas.addEventListener("click", (event) => {
-  if (buttonClick(event, 20, 140, 28, 28)) {
+  if (buttonClick(event, 20, 140, 28, 28) && energy > 0) {
     protons += 1
     energy -= 3
-  }else if (buttonClick(event, 20, 190, 28, 28)) {
+  }else if (buttonClick(event, 20, 190, 28, 28) && energy > 0) {
     electrons += 1
     energy -= 1
-  }else if (buttonClick(event, 20, 240, 28, 28)) {
+  }else if (buttonClick(event, 20, 240, 28, 28) && energy > 0) {
     neutrons += 1
     energy -= 3
+  }else if (buttonClick(event, 80, window.innerHeight - 170, 100, 100) && protons > elements.h.cost[0] - 1 && electrons > elements.h.cost[1] - 1){
+    protons -= elements.h.cost[0]
+    electrons -= elements.h.cost[1]
+    elements.h.count += 1
+  }else if (buttonClick(event, 280, window.innerHeight - 170, 100, 100) && protons > elements.he.cost[0] - 1 && electrons > elements.he.cost[1] - 1 && neutrons > elements.he.cost[2] - 1){
+    protons -= elements.he.cost[0]
+    electrons -= elements.he.cost[1]
+    neutrons -= elements.he.cost[2]
+    elements.he.count += 1
   }
 }) 
