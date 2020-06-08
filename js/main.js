@@ -47,6 +47,11 @@ function update() {
 
   drawImage("./res/ui/NeutronIcon.png", 20, 240, 28, 28)
   writeText("Neutroni: " + neutrons, 60, 262, "20px", "white")
+
+  drawRect(2, window.innerHeight - 252, window.innerWidth - 3, 250, "white")
+
+  drawImage("./res/ui/NeutronIcon.png", 80, window.innerHeight - 170, 100, 100)
+  writeText("H", 117, window.innerHeight - 107, "50px", "black")
 }
 
 function writeText(text, x, y, size, color) {
