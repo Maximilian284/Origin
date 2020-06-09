@@ -20,6 +20,8 @@ let hasConverter = false
 let converting = false
 let conv_toH = true
 let progressConverting = 0
+let fusion = false
+let progressingFusion = 0
 
 let gameArea = {
   canvas : document.createElement("canvas"),
@@ -98,16 +100,7 @@ function update() {
       writeText("Per iniziare crea: 1Fe, 1O, 1H", 20, 400, "14px", "white")
     }
 
-    //button
-    drawRect(20, 410, 255, 20, "#57585b")
-    gameArea.context.fillStyle = "#57585b" 
-    gameArea.context.fillRect(20, 410, 255, 20)
-    if(converting){
-      writeText("Stop!", 115, 425, "20px", "black", "bold")
-    }else{
-      writeText("Start!", 115, 425, "20px", "black", "bold")
-    }
-    
+    drawButton(20, 410, 255, 20, 115, 425, converting, "Stop!", "Start!")
   }
 
   if(hasConverter && converting){
@@ -115,6 +108,14 @@ function update() {
   }
 
   drawImage("./res/sprites/star.png", (window.innerWidth-lifeStar*starSize*0.7)/2,(window.innerHeight-lifeStar*starSize*0.7)/2 - 100, lifeStar*starSize*0.7,lifeStar*starSize*0.7) 
+
+  if(!starCreating){
+    drawRect(window.innerWidth - 285, 290, 275, 150, "white")
+    writeText("Fusione He-C", window.innerWidth-240, 315, "25px", "white")
+
+    drawButton(window.innerWidth - 275, 410, 255, 20, window.innerWidth-180, 425, fusion, "Stop!", "Start!")
+  }
+
 }
 
 function writeText(text, x, y, size, color, style = "normal") {
@@ -145,6 +146,17 @@ function drawElement(element, xZ, xI, xS, xN){
   drawImage("./res/ui/ContainerIcon.png", xI, window.innerHeight - 170, 100, 100)
   writeText(element.symbol, xS, window.innerHeight - 107, "50px", "black", "bold")
   writeText(element.name + ": " + element.count, xN, window.innerHeight - 35, "20px", "white")
+}
+
+function drawButton(x, y, w, h, xText, yText, condition = true,text1, text2 = ""){
+  drawRect(x,y, w,h, "#57585b")
+  gameArea.context.fillStyle = "#57585b" 
+  gameArea.context.fillRect(x,y,w,h)
+  if(condition){
+    writeText(text1, xText, yText, "20px", "black", "bold")
+  }else{
+    writeText(text2, xText, yText, "20px", "black", "bold")
+  }
 }
 
 function createElement(element){
@@ -179,15 +191,26 @@ function calcLifeStar(){
     }
     return lifeStar
   }else{
-    if(lifeStar > 0){
-      lifeStar = Number((lifeStar-0.1).toFixed(1))
-      let timeClick = Number((100/(starSize * 37)).toFixed(1))
+    if(lifeStar > 0){  
+      if(fusion){
+        progressConverting += 0.05
+        if(progressConverting >= 1 && elements.he.count >= 3){
+          progressConverting = 0
+          elements.he.count -= 3
+          elements.c.count += 1
+          energy += 10
+        }
+      }else{
+        lifeStar = Number((lifeStar-0.1).toFixed(1))
+        let timeClick = Number((100/(starSize * 37)).toFixed(1))
 
-      if(Number.isInteger(Number((lifeStar / timeClick).toFixed(2))) && elements.h.count >= 2){
-        elements.h.count -= 2
-        elements.he.count += 1
-        energy += 10
+        if(Number.isInteger(Number((lifeStar / timeClick).toFixed(2))) && elements.h.count >= 2){
+          elements.h.count -= 2
+          elements.he.count += 1
+          energy += 10
+        }
       }
+      
     }else{
       lifeStar = 0
       starCreating = true
@@ -244,7 +267,7 @@ gameArea.canvas.addEventListener("click", (event) => {
     createElement(elements.si)
   }else if (buttonClick(event, 1280, window.innerHeight - 170, 100, 100) && canCreateElement(elements.fe)){
     createElement(elements.fe)
-  }else if (buttonClick(event, 20, 410, 360, 20)){
+  }else if (buttonClick(event, 20, 410, 255, 20)){
     if(hasConverter){
       converting = !converting
     }else{
@@ -257,5 +280,7 @@ gameArea.canvas.addEventListener("click", (event) => {
     }
   }else if(buttonClick(event, 110,350,40,20) && hasConverter){
     conv_toH = !conv_toH
+  }else if(buttonClick(event, window.innerWidth - 275, 410, 255,20)){
+    fusion = !fusion
   }
 }) 
