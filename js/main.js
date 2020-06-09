@@ -9,8 +9,11 @@ let elements = {               // P  E  N
   o : {name : "Ossigeno", cost : [8, 8, 8], count : 0, symbol : "O"},
   si : {name : "Silicio", cost : [14, 14, 14], count : 0, symbol : "Si"},
   al : {name : "Alluminio", cost : [13, 13, 13], count : 0, symbol : "Al"},
-  fe : {name : "Ferro", cost : [26, 26, 26], count : 0, symbol : "Fe"},
+  fe : {name : "Ferro", cost : [26, 26, 26], count : 0, symbol : "Fe"}
 }
+let starCreating = true
+let lifeStar = 0
+let starSize = 1
 
 let gameArea = {
   canvas : document.createElement("canvas"),
@@ -61,7 +64,21 @@ function update() {
   drawElement(elements.si, 1110,1080,1102,1070)
   drawElement(elements.fe, 1310,1280,1300,1280)
 
+  calcLifeStar()
+
+  if(elements.h.count / 3 + elements.he.count > 1){
+    drawRect(window.innerWidth - 285, 130, 275, 150, "white")
+    writeText("Vita della Stella", window.innerWidth - 273, 162, "25px", "white")
+    drawRect(window.innerWidth - 270, 185, 250, 30, "white")
+    gameArea.context.fillRect(window.innerWidth - 270, 185, lifeStar/100 * 210, 30)
+    writeText("Arriva a " + starSize*75 + "H e " + starSize*25 + "He", window.innerWidth - 273, 250, "15px", "white")
+  }
+
+  drawImage("./res/sprites/star.png", (window.innerWidth-lifeStar*starSize)/2,(window.innerHeight-lifeStar*starSize)/2 - 100, lifeStar*starSize,lifeStar*starSize)
+  
 }
+
+
 
 function writeText(text, x, y, size, color, style = "normal") {
   let ctx = gameArea.context
@@ -106,6 +123,41 @@ function buttonClick(event, x, y, width, height) {
 
 function canCreateElement(element){
   return protons > element.cost[0] - 1 && electrons > element.cost[1] - 1 && neutrons > element.cost[2] - 1
+}
+
+function calcLifeStar(){
+  if(starCreating){
+    let hCount = elements.h.count
+    if(elements.h.count > 75 * starSize){
+      hCount = 75 * starSize
+    }
+    let heCount = elements.he.count
+    if(elements.he.count > 25* starSize){
+      heCount = 25* starSize
+    }
+    lifeStar = hCount + heCount
+    if(lifeStar == 100* starSize){
+      starCreating = false
+      elements.h.count += 1
+    }
+    return lifeStar
+  }else{
+    if(lifeStar > 0){
+      lifeStar = Number((lifeStar-0.1).toFixed(1))
+      let timeClick = Number((100/(starSize * 37)).toFixed(1))
+
+      if(Number.isInteger(Number((lifeStar / timeClick).toFixed(2)))){
+        elements.h.count -= 2
+        elements.he.count += 1
+        energy += 10
+      }
+    }else{
+      lifeStar = 0
+      starCreating = true
+      starSize += 1
+    }
+    return lifeStar
+  }
 }
 
 gameArea.canvas.addEventListener("click", (event) => {
