@@ -141,7 +141,7 @@ function drawRect(x, y, width, height, color) {
 }
 
 function drawElement(element, xZ, xI, xS, xN){
-  writeText("Z: " + element.cost[0], xZ, window.innerHeight - 180, "15px", "white")
+  writeText("Costo: " + element.cost[0], xZ - 13, window.innerHeight - 180, "13px", "white")
   drawImage("./res/ui/ContainerIcon.png", xI, window.innerHeight - 170, 100, 100)
   writeText(element.symbol, xS, window.innerHeight - 107, "50px", "black", "bold")
   writeText(element.name + ": " + element.count, xN, window.innerHeight - 35, "20px", "white")
