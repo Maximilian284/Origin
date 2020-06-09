@@ -11,9 +11,14 @@ let elements = {               // P  E  N
   al : {name : "Alluminio", cost : [13, 13, 13], count : 0, symbol : "Al"},
   fe : {name : "Ferro", cost : [26, 26, 26], count : 0, symbol : "Fe"}
 }
+let ui2 = false
 let starCreating = true
 let lifeStar = 0
 let starSize = 1
+let hasConverter = false
+let converting = false
+let conv_toH = true
+let progressConverting = 0
 
 let gameArea = {
   canvas : document.createElement("canvas"),
@@ -66,19 +71,50 @@ function update() {
 
   calcLifeStar()
 
-  if(elements.h.count / 3 + elements.he.count > 1){
+  if(!ui2 && elements.h.count / 3 + elements.he.count > 1){
+    ui2 = true
+  }
+
+  if(ui2){
     drawRect(window.innerWidth - 285, 130, 275, 150, "white")
     writeText("Vita della Stella", window.innerWidth - 273, 162, "25px", "white")
     drawRect(window.innerWidth - 270, 185, 250, 30, "white")
     gameArea.context.fillRect(window.innerWidth - 270, 185, lifeStar/100 * 210, 30)
     writeText("Arriva a " + starSize*75 + "H e " + starSize*25 + "He", window.innerWidth - 273, 250, "15px", "white")
+  
+    drawRect(10, 290, 380, 150, "white")
+    writeText("Convertitore energia - H", 20, 315, "25px", "white")
+
+    if(hasConverter){
+      drawImage("./res/ui/EnergyIcon.png", 40, 350, 32, 32)
+      if(conv_toH){
+        writeText("=>",80,370,"20px","white")
+      }else{
+        writeText("<=",80,370,"20px","white")
+      }
+      drawImage("./res/ui/NeutronIcon.png", 120, 350, 32, 32)
+    }else{
+      writeText("Per iniziare, creare 1Fe, 1O, 1H", 20, 370, "15px", "white")
+    }
+
+    //button
+    drawRect(20, 410, 360, 20, "#57585b")
+    gameArea.context.fillStyle = "#57585b" 
+    gameArea.context.fillRect(20, 410, 360,20)
+    if(converting){
+      writeText("Stop!", 150, 425, "20px", "black", "bold")
+    }else{
+      writeText("Start!", 150, 425, "20px", "black", "bold")
+    }
+    
   }
 
-  drawImage("./res/sprites/star.png", (window.innerWidth-lifeStar*starSize)/2,(window.innerHeight-lifeStar*starSize)/2 - 100, lifeStar*starSize,lifeStar*starSize)
-  
+  if(hasConverter && converting){
+    clockConvert();
+  }
+
+  drawImage("./res/sprites/star.png", (window.innerWidth-lifeStar*starSize)/2,(window.innerHeight-lifeStar*starSize)/2 - 100, lifeStar*starSize,lifeStar*starSize) 
 }
-
-
 
 function writeText(text, x, y, size, color, style = "normal") {
   let ctx = gameArea.context
@@ -160,6 +196,21 @@ function calcLifeStar(){
   }
 }
 
+function clockConvert(){
+  progressConverting += 0.05
+  if(progressConverting >= 1){
+    progressConverting = 0
+    if(conv_toH){
+      energy -= 1
+      elements.h.count += 1
+    }else{
+      energy += 1
+      elements.h.count -= 1
+    }
+  }
+}
+
+
 gameArea.canvas.addEventListener("click", (event) => {
   if (buttonClick(event, 20, 140, 28, 28) && energy > 0) {
     protons += 1
@@ -184,5 +235,18 @@ gameArea.canvas.addEventListener("click", (event) => {
     createElement(elements.si)
   }else if (buttonClick(event, 1280, window.innerHeight - 170, 100, 100) && canCreateElement(elements.fe)){
     createElement(elements.fe)
+  }else if (buttonClick(event, 20, 410, 360, 20)){
+    if(hasConverter){
+      converting = !converting
+    }else{
+      if(elements.fe.count >= 1 && elements.o.count >= 1 && elements.h.count >= 1){
+        elements.fe.count -= 1
+        elements.o.count -= 1
+        elements.h.count -= 1
+        hasConverter = true
+      }
+    }
+  }else if(buttonClick(event, 80,350,40,20) && hasConverter){
+    conv_toH = !conv_toH
   }
 }) 
