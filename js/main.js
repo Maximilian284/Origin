@@ -80,7 +80,7 @@ function update() {
     drawRect(window.innerWidth - 285, 130, 275, 150, "white")
     writeText("Vita della Stella", window.innerWidth - 273, 162, "25px", "white")
     drawRect(window.innerWidth - 270, 185, 250, 30, "white")
-    gameArea.context.fillRect(window.innerWidth - 270, 185, lifeStar/100 * 210, 30)
+    gameArea.context.fillRect(window.innerWidth - 270, 185, lifeStar/(100*starSize) * 250, 30)
     writeText("Arriva a " + starSize*75 + "H e " + starSize*25 + "He", window.innerWidth - 273, 250, "15px", "white")
   
     drawRect(10, 290, 275, 150, "white")
@@ -114,7 +114,7 @@ function update() {
     clockConvert();
   }
 
-  drawImage("./res/sprites/star.png", (window.innerWidth-lifeStar*starSize)/2,(window.innerHeight-lifeStar*starSize)/2 - 100, lifeStar*starSize,lifeStar*starSize) 
+  drawImage("./res/sprites/star.png", (window.innerWidth-lifeStar*starSize*0.7)/2,(window.innerHeight-lifeStar*starSize*0.7)/2 - 100, lifeStar*starSize*0.7,lifeStar*starSize*0.7) 
 }
 
 function writeText(text, x, y, size, color, style = "normal") {
@@ -183,7 +183,7 @@ function calcLifeStar(){
       lifeStar = Number((lifeStar-0.1).toFixed(1))
       let timeClick = Number((100/(starSize * 37)).toFixed(1))
 
-      if(Number.isInteger(Number((lifeStar / timeClick).toFixed(2)))){
+      if(Number.isInteger(Number((lifeStar / timeClick).toFixed(2))) && elements.h.count >= 2){
         elements.h.count -= 2
         elements.he.count += 1
         energy += 10
