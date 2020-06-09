@@ -11,6 +11,7 @@ let elements = {               // P  E  N
   al : {name : "Alluminio", cost : [13, 13, 13], count : 0, symbol : "Al"},
   fe : {name : "Ferro", cost : [26, 26, 26], count : 0, symbol : "Fe"}
 }
+
 let ui2 = false
 let starCreating = true
 let lifeStar = 0
@@ -82,29 +83,29 @@ function update() {
     gameArea.context.fillRect(window.innerWidth - 270, 185, lifeStar/100 * 210, 30)
     writeText("Arriva a " + starSize*75 + "H e " + starSize*25 + "He", window.innerWidth - 273, 250, "15px", "white")
   
-    drawRect(10, 290, 380, 150, "white")
-    writeText("Convertitore energia - H", 20, 315, "25px", "white")
+    drawRect(10, 290, 275, 150, "white")
+    writeText("Convertitore", 60, 315, "25px", "white")
 
     if(hasConverter){
-      drawImage("./res/ui/EnergyIcon.png", 40, 350, 32, 32)
+      drawImage("./res/ui/EnergyIcon.png", 90, 350, 32, 32)
       if(conv_toH){
-        writeText("=>",80,370,"20px","white")
+        writeText("=>",130,370,"20px","white")
       }else{
-        writeText("<=",80,370,"20px","white")
+        writeText("<=",130,370,"20px","white")
       }
-      drawImage("./res/ui/NeutronIcon.png", 120, 350, 32, 32)
+      drawImage("./res/ui/NeutronIcon.png", 170, 350, 32, 32)
     }else{
-      writeText("Per iniziare, creare 1Fe, 1O, 1H", 20, 370, "15px", "white")
+      writeText("Per iniziare crea: 1Fe, 1O, 1H", 20, 400, "14px", "white")
     }
 
     //button
-    drawRect(20, 410, 360, 20, "#57585b")
+    drawRect(20, 410, 255, 20, "#57585b")
     gameArea.context.fillStyle = "#57585b" 
-    gameArea.context.fillRect(20, 410, 360,20)
+    gameArea.context.fillRect(20, 410, 255, 20)
     if(converting){
-      writeText("Stop!", 150, 425, "20px", "black", "bold")
+      writeText("Stop!", 115, 425, "20px", "black", "bold")
     }else{
-      writeText("Start!", 150, 425, "20px", "black", "bold")
+      writeText("Start!", 115, 425, "20px", "black", "bold")
     }
     
   }
@@ -201,11 +202,19 @@ function clockConvert(){
   if(progressConverting >= 1){
     progressConverting = 0
     if(conv_toH){
-      energy -= 1
+      if(energy == 0){
+        converting = false
+      }else{
+        energy -= 1
       elements.h.count += 1
-    }else{
-      energy += 1
+      }
+    }else{ 
+      if(elements.h.count == 0){
+        converting = false
+      }else{
+        energy += 1
       elements.h.count -= 1
+      }
     }
   }
 }
@@ -246,7 +255,7 @@ gameArea.canvas.addEventListener("click", (event) => {
         hasConverter = true
       }
     }
-  }else if(buttonClick(event, 80,350,40,20) && hasConverter){
+  }else if(buttonClick(event, 110,350,40,20) && hasConverter){
     conv_toH = !conv_toH
   }
 }) 
