@@ -3,10 +3,13 @@ let protons = 0
 let electrons = 0
 let neutrons = 0
 let elements = {               // P  E  N 
-  h : {name : "idrogeno", cost : [1, 1, 0], count : 0}, 
-  he : {name : "elio", cost : [2, 2, 2], count : 0},
-  c : {name : "carbonio", cost : [6, 6, 6], count : 0},
-  o : {name : "ossigeno", cost : [8, 8, 8], count : 0}
+  h : {name : "Idrogeno", cost : [1, 1, 0], count : 0, symbol : "H"}, 
+  he : {name : "Elio", cost : [2, 2, 2], count : 0, symbol : "He"},
+  c : {name : "Carbonio", cost : [6, 6, 6], count : 0, symbol : "C"},
+  o : {name : "Ossigeno", cost : [8, 8, 8], count : 0, symbol : "O"},
+  si : {name : "Silicio", cost : [14, 14, 14], count : 0, symbol : "Si"},
+  al : {name : "Alluminio", cost : [13, 13, 13], count : 0, symbol : "Al"},
+  fe : {name : "Ferro", cost : [26, 26, 26], count : 0, symbol : "Fe"},
 }
 
 let gameArea = {
@@ -48,15 +51,16 @@ function update() {
   drawImage("./res/ui/NeutronIcon.png", 20, 240, 28, 28)
   writeText("Neutroni: " + neutrons, 60, 262, "20px", "white")
 
-  drawRect(-2, window.innerHeight - 248, window.innerWidth + 3, 250, "white")
+  drawRect(-2, window.innerHeight - 218, window.innerWidth + 3, 220, "white")
 
-  drawImage("./res/ui/ContainerIcon.png", 80, window.innerHeight - 170, 100, 100)
-  writeText("H", 114, window.innerHeight - 107, "50px", "black", "bold")
-  writeText("Idrogeno: " + elements.h.count, 50, window.innerHeight - 35, "20px", "white")
+  drawElement(elements.h, 114,80,114,60)
+  drawElement(elements.he, 315,280,302,280)
+  drawElement(elements.c, 510,480,513,460)
+  drawElement(elements.o, 710,680,714,670)
+  drawElement(elements.al, 910,880,904,860)
+  drawElement(elements.si, 1110,1080,1102,1070)
+  drawElement(elements.fe, 1310,1280,1300,1280)
 
-  drawImage("./res/ui/ContainerIcon.png", 280, window.innerHeight - 170, 100, 100)
-  writeText("He", 302, window.innerHeight - 107, "50px", "black", "bold")
-  writeText("Elio: " + elements.he.count, 270, window.innerHeight - 35, "20px", "white")
 }
 
 function writeText(text, x, y, size, color, style = "normal") {
@@ -82,8 +86,26 @@ function drawRect(x, y, width, height, color) {
   ctx.stroke()
 }
 
+function drawElement(element, xZ, xI, xS, xN){
+  writeText("Z: " + element.cost[0], xZ, window.innerHeight - 180, "15px", "white")
+  drawImage("./res/ui/ContainerIcon.png", xI, window.innerHeight - 170, 100, 100)
+  writeText(element.symbol, xS, window.innerHeight - 107, "50px", "black", "bold")
+  writeText(element.name + ": " + element.count, xN, window.innerHeight - 35, "20px", "white")
+}
+
+function createElement(element){
+  protons -= element.cost[0]
+  electrons -= element.cost[1]
+  neutrons -= element.cost[2]
+  element.count += 1
+}
+
 function buttonClick(event, x, y, width, height) {
   return event.x > x && event.x < x + width && event.y > y && event.y < y + height
+}
+
+function canCreateElement(element){
+  return protons > element.cost[0] - 1 && electrons > element.cost[1] - 1 && neutrons > element.cost[2] - 1
 }
 
 gameArea.canvas.addEventListener("click", (event) => {
@@ -96,14 +118,19 @@ gameArea.canvas.addEventListener("click", (event) => {
   }else if (buttonClick(event, 20, 240, 28, 28) && energy > 0) {
     neutrons += 1
     energy -= 3
-  }else if (buttonClick(event, 80, window.innerHeight - 170, 100, 100) && protons > elements.h.cost[0] - 1 && electrons > elements.h.cost[1] - 1){
-    protons -= elements.h.cost[0]
-    electrons -= elements.h.cost[1]
-    elements.h.count += 1
-  }else if (buttonClick(event, 280, window.innerHeight - 170, 100, 100) && protons > elements.he.cost[0] - 1 && electrons > elements.he.cost[1] - 1 && neutrons > elements.he.cost[2] - 1){
-    protons -= elements.he.cost[0]
-    electrons -= elements.he.cost[1]
-    neutrons -= elements.he.cost[2]
-    elements.he.count += 1
+  }else if (buttonClick(event, 80, window.innerHeight - 170, 100, 100) && canCreateElement(elements.h)){
+    createElement(elements.h)
+  }else if (buttonClick(event, 280, window.innerHeight - 170, 100, 100) && canCreateElement(elements.he)){
+    createElement(elements.he)
+  }else if (buttonClick(event, 480, window.innerHeight - 170, 100, 100) && canCreateElement(elements.c)){
+    createElement(elements.c)
+  }else if (buttonClick(event, 680, window.innerHeight - 170, 100, 100) && canCreateElement(elements.o)){
+    createElement(elements.o)
+  }else if (buttonClick(event, 880, window.innerHeight - 170, 100, 100) && canCreateElement(elements.al)){
+    createElement(elements.al)
+  }else if (buttonClick(event, 1080, window.innerHeight - 170, 100, 100) && canCreateElement(elements.si)){
+    createElement(elements.si)
+  }else if (buttonClick(event, 1280, window.innerHeight - 170, 100, 100) && canCreateElement(elements.fe)){
+    createElement(elements.fe)
   }
 }) 
