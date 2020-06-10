@@ -228,14 +228,14 @@ function clockConvert(){
       if(energy == 0){
         converting = false
       }else{
-        energy -= 1
+        energy -= 2
       elements.h.count += 1
       }
     }else{ 
       if(elements.h.count == 0){
         converting = false
       }else{
-        energy += 1
+        energy += 2
       elements.h.count -= 1
       }
     }
