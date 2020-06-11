@@ -385,6 +385,6 @@ gameArea.canvas.addEventListener("click", (event) => {
       elements.fe.count -= 1
     }
   }else if(buttonClick(event, window.innerWidth - 170, 25, 150, 40)) {
-    restart()
+    reset()
   }
 }) 
