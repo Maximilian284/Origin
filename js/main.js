@@ -47,6 +47,15 @@ function start() {
 
 function update() {
   gameArea.clear()
+  
+  if(energy <= 0){
+    energy = 0
+    writeText("YOU LOSE", window.innerWidth/2 - 110, 100, "50px", "red")
+    setTimeout(()=>{
+      window.location.reload()
+    },3000)
+  }
+
   writeText("Origin", 20, 50, "45px", "#feda4a")
 
   drawImage("./res/ui/EnergyIcon.png", 20, 80, 32, 32)
