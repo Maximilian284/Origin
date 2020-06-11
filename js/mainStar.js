@@ -43,11 +43,16 @@ let gameArea = {
 
 function start() {
   gameArea.start()
+  if (localStorage.getItem("energy") !== null) {
+    loadVar()
+  }
 }
 
 function update() {
   gameArea.clear()
   
+  saveVar()
+
   //way to lose
   if(energy <= 0){
     energy = 0
@@ -67,6 +72,8 @@ function update() {
   }
 
   writeText("Origin", 20, 50, "45px", "#feda4a")
+
+  drawButton(window.innerWidth - 170, 25, 150, 40, window.innerWidth - 127, 50, true, "Reset")
 
   drawImage("./res/ui/EnergyIcon.png", 20, 80, 32, 32)
   writeText("Energia: " + energy, 55, 102, "20px", "white")
@@ -136,7 +143,6 @@ function update() {
 
     drawButton(window.innerWidth - 275, 410, 255, 20, window.innerWidth-180, 425, fusion, "Stop!", "Start!")
   }
-
 }
 
 function writeText(text, x, y, size, color, style = "normal") {
@@ -193,6 +199,76 @@ function buttonClick(event, x, y, width, height) {
 
 function canCreateElement(element){
   return protons > element.cost[0] - 1 && electrons > element.cost[1] - 1 && neutrons > element.cost[2] - 1
+}
+
+function saveVar() {
+  localStorage.setItem("energy", energy)
+  localStorage.setItem("protons", protons)
+  localStorage.setItem("electrons", electrons)
+  localStorage.setItem("neutrons", neutrons)
+  localStorage.setItem("elements", JSON.stringify(elements))
+
+  localStorage.setItem("ui2", ui2)
+  localStorage.setItem("starCreating", starCreating)
+  localStorage.setItem("lifeStar", lifeStar)
+  localStorage.setItem("starSize", starSize)
+  localStorage.setItem("hasConverter", hasConverter)
+  localStorage.setItem("converting", converting)
+  localStorage.setItem("conv_toH", conv_toH)
+  localStorage.setItem("progressConverting", progressConverting)
+  localStorage.setItem("fusion", fusion)
+  localStorage.setItem("progressingFusion", progressingFusion)
+  localStorage.setItem("convert_time", convert_time)
+}
+
+function loadVar() {
+  energy = parseInt(localStorage.getItem("energy"))
+  protons = parseInt(localStorage.getItem("protons"))
+  electrons = parseInt(localStorage.getItem("electrons"))
+  neutrons = parseInt(localStorage.getItem("neutrons"))
+  elements = JSON.parse(localStorage.getItem("elements"))
+
+  ui2 = JSON.parse(localStorage.getItem("ui2"))
+  starCreating = JSON.parse(localStorage.getItem("starCreating"))
+  lifeStar = parseInt(localStorage.getItem("lifeStar"))
+  starSize = parseInt(localStorage.getItem("starSize"))
+  hasConverter = JSON.parse(localStorage.getItem("hasConverter"))
+  converting = JSON.parse(localStorage.getItem("converting"))
+  conv_toH = JSON.parse(localStorage.getItem("conv_toH"))
+  progressConverting = parseInt(localStorage.getItem("progressConverting"))
+  fusion = JSON.parse(localStorage.getItem("fusion"))
+  progressingFusion = parseInt(localStorage.getItem("progressingFusion"))
+  convert_time = parseFloat(localStorage.getItem("convert_time"))
+}
+
+function reset(){
+  energy = 1000
+  protons = 0
+  electrons = 0
+  neutrons = 0
+  elements = {               
+    h : {name : "Idrogeno", cost : [1, 1, 0], count : 0, symbol : "H"}, 
+    he : {name : "Elio", cost : [2, 2, 2], count : 0, symbol : "He"},
+    c : {name : "Carbonio", cost : [6, 6, 6], count : 0, symbol : "C"},
+    o : {name : "Ossigeno", cost : [8, 8, 8], count : 0, symbol : "O"},
+    si : {name : "Silicio", cost : [14, 14, 14], count : 0, symbol : "Si"},
+    al : {name : "Alluminio", cost : [13, 13, 13], count : 0, symbol : "Al"},
+    fe : {name : "Ferro", cost : [26, 26, 26], count : 0, symbol : "Fe"}
+  }
+
+  ui2 = false
+  starCreating = true
+  lifeStar = 0
+  starSize = 1
+  hasConverter = false
+  converting = false
+  conv_toH = true
+  progressConverting = 0
+  fusion = false
+  progressingFusion = 0
+  convert_time = 0.05
+
+  saveVar()
 }
 
 function calcLifeStar(){
@@ -308,5 +384,7 @@ gameArea.canvas.addEventListener("click", (event) => {
       convert_time += 0.05
       elements.fe.count -= 1
     }
+  }else if(buttonClick(event, window.innerWidth - 170, 25, 150, 40)) {
+    restart()
   }
 }) 
