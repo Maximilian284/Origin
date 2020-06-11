@@ -48,11 +48,21 @@ function start() {
 function update() {
   gameArea.clear()
   
+  //way to lose
   if(energy <= 0){
     energy = 0
-    writeText("YOU LOSE", window.innerWidth/2 - 110, 100, "50px", "red")
+    writeText("HAI PERSO!", window.innerWidth/2 - 110, 100, "50px", "#214fb1","bold")
     setTimeout(()=>{
       window.location.reload()
+    },3000)
+  }
+
+  //way to win
+  if(starSize >= 3){
+    writeText("HAI COMPLETATO LA CREAZIONE DI STELLE", window.innerWidth/2 - 300, 100, "30px", "#214fb1", "bold")
+    writeText("PASSAGGIO ALLA CREAZIONE DI PIANETI IN CORSO...", window.innerWidth/2 - 260, 140, "20px", "#214fb1", "bold")
+    setTimeout(()=>{
+      window.open("./planet.html", "_self");
     },3000)
   }
 
