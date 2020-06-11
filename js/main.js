@@ -22,6 +22,7 @@ let conv_toH = true
 let progressConverting = 0
 let fusion = false
 let progressingFusion = 0
+let convert_time = 0.05
 
 let gameArea = {
   canvas : document.createElement("canvas"),
@@ -85,7 +86,7 @@ function update() {
     gameArea.context.fillRect(window.innerWidth - 270, 185, lifeStar/(100*starSize) * 250, 30)
     writeText("Arriva a " + starSize*75 + "H e " + starSize*25 + "He", window.innerWidth - 273, 250, "15px", "white")
   
-    drawRect(10, 290, 275, 150, "white")
+    drawRect(10, 290, 275, 180, "white")
     writeText("Convertitore", 60, 315, "25px", "white")
 
     if(hasConverter){
@@ -101,6 +102,7 @@ function update() {
     }
 
     drawButton(20, 410, 255, 20, 115, 425, converting, "Stop!", "Start!")
+    drawButton(20, 435, 255, 20, 70, 450, true, "Migliora (1Fe)")
   }
 
   if(hasConverter && converting){
@@ -221,7 +223,7 @@ function calcLifeStar(){
 }
 
 function clockConvert(){
-  progressConverting += 0.05
+  progressConverting += convert_time
   if(progressConverting >= 1){
     progressConverting = 0
     if(conv_toH){
@@ -282,5 +284,10 @@ gameArea.canvas.addEventListener("click", (event) => {
     conv_toH = !conv_toH
   }else if(buttonClick(event, window.innerWidth - 275, 410, 255,20)){
     fusion = !fusion
+  }else if(buttonClick(event, 20, 435, 255, 20)){
+    if(elements.fe.count >= 1){
+      convert_time += 0.05
+      elements.fe.count -= 1
+    }
   }
 }) 
