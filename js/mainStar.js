@@ -67,7 +67,7 @@ function update() {
     writeText("HAI COMPLETATO LA CREAZIONE DI STELLE", window.innerWidth/2 - 300, 100, "30px", "#214fb1", "bold")
     writeText("PASSAGGIO ALLA CREAZIONE DI PIANETI IN CORSO...", window.innerWidth/2 - 260, 140, "20px", "#214fb1", "bold")
     setTimeout(()=>{
-      window.open("./planet.html", "_self");
+      window.open("./planet.html", "_self")
     },3000)
   }
 
